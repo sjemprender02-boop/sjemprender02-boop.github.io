@@ -6,8 +6,8 @@
   <title>Ignacio | Automatización de WhatsApp y Agenda con IA</title>
   
   <!-- Tipografía moderna desde Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
@@ -30,6 +30,7 @@
       --accent-cyan: #06b6d4;
       --accent-green: #10b981;
       --accent-red: #ef4444;
+      --accent-purple: #8b5cf6;
       
       --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
       --gradient-card: linear-gradient(180deg, rgba(31, 41, 55, 0.7) 0%, rgba(17, 24, 39, 0.9) 100%);
@@ -71,7 +72,7 @@
        ========================================================================== */
     .container {
       width: 100%;
-      max-width: 900px;
+      max-width: 920px;
       margin: 0 auto;
       padding: 0 20px;
     }
@@ -125,11 +126,29 @@
       box-shadow: 0 0 10px var(--accent-green);
     }
 
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .nav-link-demo {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .nav-link-demo:hover {
+      color: var(--accent-cyan);
+    }
+
     .btn-header {
       background: rgba(59, 130, 246, 0.15);
       color: var(--accent-cyan);
       border: 1px solid var(--border-accent);
-      padding: 8px 16px;
+      padding: 8px 18px;
       border-radius: var(--radius-full);
       text-decoration: none;
       font-size: 0.85rem;
@@ -356,60 +375,361 @@
     }
 
     /* ==========================================================================
-       SECCIÓN 3: DEMO (ANTES Y DESPUÉS)
+       SECCIÓN 3: DEMO INTERACTIVA (FICHA DE CLIENTE + HISTORIAL + PRÓXIMO TURNO)
        ========================================================================== */
-    .demo-comparison {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
+    .demo-block {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      margin-top: 30px;
+      box-shadow: var(--shadow-glow);
+    }
+
+    @media (max-width: 640px) {
+      .demo-block {
+        padding: 20px 16px;
+      }
+    }
+
+    .demo-step-box {
+      background: rgba(17, 24, 39, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+    }
+
+    .demo-step-box.antes {
+      border-left: 4px solid var(--accent-red);
+    }
+
+    .demo-step-box.despues {
+      border-left: 4px solid var(--accent-green);
       margin-top: 24px;
       margin-bottom: 24px;
     }
 
-    @media (max-width: 700px) {
-      .demo-comparison {
+    .demo-step-tag {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .demo-step-box.antes .demo-step-tag {
+      color: #f87171;
+    }
+
+    .demo-step-box.despues .demo-step-tag {
+      color: #34d399;
+    }
+
+    .demo-step-text {
+      font-size: 1rem;
+      color: #e2e8f0;
+      line-height: 1.5;
+    }
+
+    /* Interfaz de la Demo */
+    .demo-app {
+      background: #0d1321;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .demo-app-header {
+      background: #151d30;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .demo-app-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-highlight);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-rubro-badge {
+      background: rgba(139, 92, 246, 0.2);
+      color: #c4b5fd;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .demo-body {
+      padding: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .demo-body {
+        padding: 16px;
+      }
+    }
+
+    /* Buscador */
+    .search-box {
+      margin-bottom: 20px;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: #1a2336;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-md);
+      padding: 12px 16px 12px 42px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .search-icon-svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .quick-chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .quick-chips-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .chip-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: #cbd5e1;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .chip-btn:hover, .chip-btn.active {
+      background: var(--accent-blue);
+      color: #fff;
+      border-color: var(--accent-blue);
+    }
+
+    /* Ficha del Cliente */
+    .client-card {
+      background: #151f33;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .client-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 14px;
+    }
+
+    .client-info-main {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .client-avatar {
+      width: 46px;
+      height: 46px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    .client-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-highlight);
+    }
+
+    .client-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    /* Bloque Próximo Turno */
+    .next-turn-card {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+    }
+
+    .next-turn-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .next-turn-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .next-turn-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      font-size: 0.92rem;
+      color: #e2e8f0;
+    }
+
+    @media (max-width: 540px) {
+      .next-turn-details {
         grid-template-columns: 1fr;
       }
     }
 
-    .demo-box {
-      padding: 22px;
-      border-radius: var(--radius-md);
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
+    .next-turn-sync {
+      font-size: 0.78rem;
+      color: #93c5fd;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .demo-box-tag {
-      font-size: 0.75rem;
+    /* Historial */
+    .history-title {
+      font-size: 0.85rem;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      color: var(--text-highlight);
       margin-bottom: 10px;
-      display: inline-block;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .demo-box.antes .demo-box-tag {
-      color: #f87171;
+    .history-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .demo-box.despues .demo-box-tag {
-      color: #34d399;
+    .history-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
     }
 
-    .demo-placeholder-frame {
-      margin-top: 24px;
-      background: #0d1321;
-      border: 2px dashed rgba(59, 130, 246, 0.3);
-      border-radius: var(--radius-lg);
-      padding: 40px 20px;
-      text-align: center;
-      color: var(--text-muted);
+    @media (max-width: 500px) {
+      .history-item {
+        flex-direction: column;
+        gap: 4px;
+      }
     }
 
-    .demo-placeholder-icon {
-      font-size: 2.2rem;
-      margin-bottom: 12px;
+    .history-date {
+      color: var(--accent-cyan);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .history-desc {
+      color: #cbd5e1;
+    }
+
+    /* Botón final de la demo */
+    .demo-cta-btn {
       display: block;
+      width: 100%;
+      text-align: center;
+      background: var(--gradient-accent);
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 16px 24px;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      box-shadow: 0 8px 20px -5px rgba(6, 182, 212, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin-top: 8px;
+    }
+
+    .demo-cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px -5px rgba(6, 182, 212, 0.6);
     }
 
     /* ==========================================================================
@@ -658,7 +978,10 @@
         <span class="brand-badge"></span>
         Ignacio | Servicios de IA
       </a>
-      <a href="#agendar" class="btn-header">Agendar reunión</a>
+      <div class="nav-links">
+        <a href="#demo" class="nav-link-demo">Ver Demo</a>
+        <a href="#agendar" class="btn-header">Agendar reunión</a>
+      </div>
     </div>
   </header>
 
@@ -746,36 +1069,70 @@
     </section>
 
     <!-- ==========================================================================
-         SECCIÓN 3: DEMO (ANTES Y DESPUÉS)
+         SECCIÓN 3: DEMO INTERACTIVA (ANTES Y DESPUÉS + FICHA EN VIVO)
          ========================================================================== -->
     <section id="demo">
       <div class="container">
-        <span class="section-badge">Transformación visual</span>
+        <span class="section-badge">Demo interactiva en vivo</span>
         <h2 class="section-title">De contestar mensajes a las 11 de la noche a tener la agenda llena sola.</h2>
 
-        <div class="demo-comparison">
-          <!-- Antes -->
-          <div class="demo-box antes">
-            <span class="demo-box-tag">❌ El Antes</span>
-            <p class="section-desc">
-              Clientes esperando horas una respuesta, turnos superpuestos por error y vos pasando datos a mano después de cerrar el local.
+        <div class="demo-block">
+          <!-- 1) Frase del Antes -->
+          <div class="demo-step-box antes">
+            <span class="demo-step-tag">❌ El Antes</span>
+            <p class="demo-step-text">
+              <strong>Antes:</strong> Buscabas en chats viejos de WhatsApp qué se había hecho el cliente, cuándo vino por última vez o si tenía turno pendiente.
             </p>
           </div>
 
-          <!-- Después -->
-          <div class="demo-box despues">
-            <span class="demo-box-tag">✨ El Después</span>
-            <p class="section-desc">
-              Tu asistente responde al toque a cualquier hora, filtra a los interesados y vos abrís el celular con el día ya organizado y confirmado.
+          <!-- 2) Demo Interactiva: Ficha de cliente -->
+          <div class="demo-app">
+            <div class="demo-app-header">
+              <div class="demo-app-title">
+                <span>📋 Ficha de Cliente y Próximo Turno</span>
+              </div>
+              <span class="demo-rubro-badge">Ejemplo: Consultorio & Estética Integral</span>
+            </div>
+
+            <div class="demo-body">
+              <!-- Buscador -->
+              <div class="search-box">
+                <div class="search-input-wrap">
+                  <svg class="search-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  <input type="text" id="clientSearchInput" class="search-input" placeholder="Buscá por nombre (ej: Camila, Martín, Lucía, Javier)..." autocomplete="off">
+                </div>
+
+                <div class="quick-chips-wrap">
+                  <span class="quick-chips-label">Prueba rápida:</span>
+                  <button class="chip-btn active" data-name="Camila Gómez">Camila Gómez</button>
+                  <button class="chip-btn" data-name="Martín Rodríguez">Martín Rodríguez</button>
+                  <button class="chip-btn" data-name="Lucía Fernández">Lucía Fernández</button>
+                  <button class="chip-btn" data-name="Javier Benítez">Javier Benítez</button>
+                </div>
+              </div>
+
+              <!-- Contenedor dinámico de la Ficha -->
+              <div id="clientCardDisplay" class="client-card">
+                <!-- Se llena con JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 3) Frase del Después -->
+          <div class="demo-step-box despues">
+            <span class="demo-step-tag">✨ El Después</span>
+            <p class="demo-step-text">
+              <strong>Después:</strong> Escribís el nombre y en un segundo tenés toda la ficha ordenada, el historial de atención y el próximo turno confirmado sin tocar un papel ni revisar chats.
             </p>
           </div>
-        </div>
 
-        <!-- Caja de Demo (Placeholder visual) -->
-        <div class="demo-placeholder-frame">
-          <span class="demo-placeholder-icon">📱 ⇄ 📅</span>
-          <h3 style="color: var(--text-highlight); margin-bottom: 8px;">Espacio de Demostración</h3>
-          <p style="font-size: 0.95rem;">Aquí se mostrará la captura o video interactivo de la conversación en WhatsApp y la cita agendada en vivo.</p>
+          <!-- Botón de conversión al final de la Demo -->
+          <a href="#agendar" class="demo-cta-btn">
+            ¿Lo ves claro? Agendá 20 minutos y te armo la versión para tu negocio
+          </a>
         </div>
       </div>
     </section>
@@ -969,28 +1326,196 @@
   </footer>
 
   <!-- ==========================================================================
-       JAVASCRIPT EMBEBIDO: INTERACTIVIDAD DE PREGUNTAS FRECUENTES (FAQ)
+       JAVASCRIPT EMBEBIDO: FAQ & DEMO INTERACTIVA
        ========================================================================== -->
   <script>
-    // Manejo de acordeón interactivo para las preguntas frecuentes
-    document.addEventListener('DOMContentLoaded', () => {
-      const faqItems = document.querySelectorAll('.faq-item');
+    // 1. Base de datos de prueba realista (Consultorio / Estética)
+    const CLIENTS_DB = [
+      {
+        id: 1,
+        name: "Camila Gómez",
+        avatar: "CG",
+        phone: "+54 9 11 5824-9912",
+        status: "Turno Confirmado",
+        origin: "WhatsApp Automático",
+        nextTurn: {
+          date: "Jueves 4 de Septiembre — 16:30 hs",
+          service: "Limpieza facial profunda + Control",
+          location: "Consultorio Central — Box 2",
+          sync: "Sincronizado con Google Calendar (Notificación enviada)"
+        },
+        history: [
+          { date: "15 Ago 2026", service: "Primera consulta de diagnóstico", note: "Evaluación inicial y plan de sesiones." },
+          { date: "28 Jul 2026", service: "Consulta informativa vía WhatsApp", note: "Pide info de precios y horarios disponibles." }
+        ]
+      },
+      {
+        id: 2,
+        name: "Martín Rodríguez",
+        avatar: "MR",
+        phone: "+54 9 11 4192-3301",
+        status: "Turno Confirmado",
+        origin: "WhatsApp Automático",
+        nextTurn: {
+          date: "Viernes 5 de Septiembre — 10:00 hs",
+          service: "Evaluación postural y kinesiología",
+          location: "Consultorio Central — Box 1",
+          sync: "Sincronizado con Google Calendar (Notificación enviada)"
+        },
+        history: [
+          { date: "20 Ago 2026", service: "Sesión 2 de rehabilitación", note: "Evolución favorable en zona lumbar." },
+          { date: "05 Ago 2026", service: "Sesión 1 y evaluación", note: "Inicio de tratamiento." }
+        ]
+      },
+      {
+        id: 3,
+        name: "Lucía Fernández",
+        avatar: "LF",
+        phone: "+54 9 11 6301-8845",
+        status: "Turno Confirmado",
+        origin: "WhatsApp Automático",
+        nextTurn: {
+          date: "Lunes 8 de Septiembre — 18:00 hs",
+          service: "Control odontológico semestral",
+          location: "Consultorio Dental — Sala A",
+          sync: "Sincronizado con Google Calendar (Notificación enviada)"
+        },
+        history: [
+          { date: "10 Mar 2026", service: "Blanqueamiento dental", note: "Tratamiento completo finalizado con éxito." },
+          { date: "18 Feb 2026", service: "Limpieza con ultrasonido", note: "Sin caries activas." }
+        ]
+      },
+      {
+        id: 4,
+        name: "Javier Benítez",
+        avatar: "JB",
+        phone: "+54 9 11 3918-7720",
+        status: "Turno Confirmado",
+        origin: "WhatsApp Automático",
+        nextTurn: {
+          date: "Miércoles 10 de Septiembre — 15:00 hs",
+          service: "Consulta nutricional y seguimiento",
+          location: "Consultorio Nutrición — Sala B",
+          sync: "Sincronizado con Google Calendar (Notificación enviada)"
+        },
+        history: [
+          { date: "12 Ago 2026", service: "Control mensual de rutina", note: "Ajuste de plan semanal." },
+          { date: "14 Jul 2026", service: "Primera sesión y antropometría", note: "Ficha médica cargada." }
+        ]
+      }
+    ];
 
+    // Renderizar la ficha del cliente en el DOM
+    function renderClientCard(client) {
+      const display = document.getElementById('clientCardDisplay');
+      if (!client) {
+        display.innerHTML = `
+          <div style="text-align: center; padding: 30px; color: var(--text-muted);">
+            <p style="font-size: 1.1rem; margin-bottom: 8px;">🔍 No se encontró ningún cliente con ese nombre.</p>
+            <p style="font-size: 0.85rem;">Probá buscando: Camila, Martín, Lucía o Javier.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const historyHtml = client.history.map(item => `
+        <li class="history-item">
+          <div>
+            <span class="history-date">${item.date}</span> — <strong>${item.service}</strong>
+            <div style="color: #94a3b8; font-size: 0.82rem; margin-top: 3px;">${item.note}</div>
+          </div>
+        </li>
+      `).join('');
+
+      display.innerHTML = `
+        <div class="client-card-header">
+          <div class="client-info-main">
+            <div class="client-avatar">${client.avatar}</div>
+            <div>
+              <div class="client-name">${client.name}</div>
+              <div class="client-sub">${client.phone} • Origen: <strong>${client.origin}</strong></div>
+            </div>
+          </div>
+          <span class="status-badge">
+            <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block;"></span>
+            ${client.status}
+          </span>
+        </div>
+
+        <div class="next-turn-card">
+          <div class="next-turn-header">
+            <span class="next-turn-title">📅 Próximo Turno Agendado</span>
+          </div>
+          <div class="next-turn-details">
+            <div>
+              <span style="color: var(--text-muted); font-size: 0.8rem; display: block;">Fecha y Hora:</span>
+              <strong>${client.nextTurn.date}</strong>
+            </div>
+            <div>
+              <span style="color: var(--text-muted); font-size: 0.8rem; display: block;">Servicio / Lugar:</span>
+              <strong>${client.nextTurn.service}</strong> (${client.nextTurn.location})
+            </div>
+          </div>
+          <div class="next-turn-sync">
+            <span>⚡</span> ${client.nextTurn.sync}
+          </div>
+        </div>
+
+        <div>
+          <div class="history-title">
+            <span>📜</span> Historial de atenciones anteriores
+          </div>
+          <ul class="history-list">
+            ${historyHtml}
+          </ul>
+        </div>
+      `;
+    }
+
+    // Inicialización y eventos
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Acordeón de FAQs
+      const faqItems = document.querySelectorAll('.faq-item');
       faqItems.forEach(item => {
         const questionBtn = item.querySelector('.faq-question');
-        
         questionBtn.addEventListener('click', () => {
           const isActive = item.classList.contains('active');
-          
-          // Cerrar los demás elementos abiertos para mantener el orden
-          faqItems.forEach(otherItem => {
-            otherItem.classList.remove('active');
-          });
+          faqItems.forEach(otherItem => otherItem.classList.remove('active'));
+          if (!isActive) item.classList.add('active');
+        });
+      });
 
-          // Alternar el estado del elemento clickeado
-          if (!isActive) {
-            item.classList.add('active');
-          }
+      // 2. Demo interactiva: Estado inicial
+      renderClientCard(CLIENTS_DB[0]);
+
+      const searchInput = document.getElementById('clientSearchInput');
+      const chipButtons = document.querySelectorAll('.chip-btn');
+
+      // Buscar por input de texto
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        chipButtons.forEach(btn => btn.classList.remove('active'));
+
+        if (!query) {
+          renderClientCard(CLIENTS_DB[0]);
+          chipButtons[0].classList.add('active');
+          return;
+        }
+
+        const match = CLIENTS_DB.find(c => c.name.toLowerCase().includes(query));
+        renderClientCard(match || null);
+      });
+
+      // Botones rápidos (Chips)
+      chipButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          chipButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+
+          const clientName = button.getAttribute('data-name');
+          searchInput.value = '';
+          const client = CLIENTS_DB.find(c => c.name === clientName);
+          renderClientCard(client);
         });
       });
     });
