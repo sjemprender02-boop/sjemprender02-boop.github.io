@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ignacio | Automatización de WhatsApp y Agenda con IA</title>
+  
+  <!-- Tipografía moderna desde Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       VARIABLES DE COLOR Y ESTILOS GLOBALES
+       ========================================================================== */
+    :root {
+      --bg-primary: #0b0f19;
+      --bg-surface: #111827;
+      --bg-card: #1f2937;
+      --bg-card-hover: #263345;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(59, 130, 246, 0.3);
+      
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-highlight: #ffffff;
+      
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      
+      --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      --gradient-card: linear-gradient(180deg, rgba(31, 41, 55, 0.7) 0%, rgba(17, 24, 39, 0.9) 100%);
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      
+      --shadow-subtle: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 35px -5px rgba(59, 130, 246, 0.25);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    body {
+      overflow-x: hidden;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 15% 10%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 60%, rgba(6, 182, 212, 0.08) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    /* ==========================================================================
+       CONTENEDORES Y ESTRUCTURA
+       ========================================================================== */
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    section {
+      padding: 70px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 640px) {
+      section {
+        padding: 50px 0;
+      }
+    }
+
+    /* ==========================================================================
+       HEADER Y NAVEGACIÓN
+       ========================================================================== */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 18px 0;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-logo {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-highlight);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-green);
+    }
+
+    .btn-header {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid var(--border-accent);
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-header:hover {
+      background: var(--accent-blue);
+      color: #fff;
+    }
+
+    /* ==========================================================================
+       TIPOGRAFÍA Y ELEMENTOS DE SECCIÓN
+       ========================================================================== */
+    .section-badge {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.25);
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-highlight);
+      line-height: 1.25;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 640px) {
+      .section-title {
+        font-size: 1.6rem;
+      }
+    }
+
+    .section-desc {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    /* ==========================================================================
+       SECCIÓN 1: HERO / QUIÉN SOY Y QUÉ OFREZCO
+       ========================================================================== */
+    .hero {
+      padding: 90px 0 70px;
+      text-align: left;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-highlight);
+      line-height: 1.2;
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title span {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    @media (max-width: 640px) {
+      .hero-title {
+        font-size: 1.85rem;
+      }
+    }
+
+    .hero-card {
+      background: var(--gradient-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-subtle);
+      margin-top: 24px;
+    }
+
+    .hero-phrase {
+      font-size: 1.12rem;
+      color: #e2e8f0;
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .hero-phrase:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ==========================================================================
+       SECCIÓN 2: PARA QUIÉN SÍ / PARA QUIÉN NO
+       ========================================================================== */
+    .grid-qualification {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 28px;
+    }
+
+    @media (max-width: 700px) {
+      .grid-qualification {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card-qual {
+      padding: 26px;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card-qual.si {
+      border-top: 4px solid var(--accent-green);
+    }
+
+    .card-qual.no {
+      border-top: 4px solid var(--accent-red);
+    }
+
+    .qual-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-highlight);
+    }
+
+    .qual-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+
+    .qual-icon.si {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+    }
+
+    .qual-icon.no {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--accent-red);
+    }
+
+    /* ==========================================================================
+       SECCIÓN 3: DEMO (ANTES Y DESPUÉS)
+       ========================================================================== */
+    .demo-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 700px) {
+      .demo-comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .demo-box {
+      padding: 22px;
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+    }
+
+    .demo-box-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+
+    .demo-box.antes .demo-box-tag {
+      color: #f87171;
+    }
+
+    .demo-box.despues .demo-box-tag {
+      color: #34d399;
+    }
+
+    .demo-placeholder-frame {
+      margin-top: 24px;
+      background: #0d1321;
+      border: 2px dashed rgba(59, 130, 246, 0.3);
+      border-radius: var(--radius-lg);
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .demo-placeholder-icon {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    /* ==========================================================================
+       SECCIÓN 4: CÓMO TRABAJO, PASO A PASO
+       ========================================================================== */
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .step-card {
+      display: flex;
+      gap: 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      padding: 22px;
+      border-radius: var(--radius-md);
+      align-items: flex-start;
+    }
+
+    @media (max-width: 560px) {
+      .step-card {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+
+    .step-number {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent-cyan);
+      font-weight: 800;
+      font-size: 1.1rem;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      border: 1px solid var(--border-accent);
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       SECCIÓN 5: CÓMO ARMO UN PRESUPUESTO
+       ========================================================================== */
+    .budget-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    @media (max-width: 700px) {
+      .budget-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .budget-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+    }
+
+    .budget-item h3 {
+      font-size: 1.1rem;
+      color: var(--text-highlight);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       SECCIÓN 6: PREGUNTAS FRECUENTES (FAQ)
+       ========================================================================== */
+    .faq-container {
+      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+    }
+
+    .faq-item:hover {
+      border-color: var(--border-accent);
+    }
+
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 18px 22px;
+      color: var(--text-highlight);
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .faq-icon {
+      font-size: 1.2rem;
+      color: var(--accent-cyan);
+      transition: transform 0.2s ease;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), padding 0.3s ease;
+      padding: 0 22px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 250px;
+      padding-bottom: 18px;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    /* ==========================================================================
+       SECCIÓN 7: CTA AGENDAR REUNIÓN
+       ========================================================================== */
+    .cta-section {
+      text-align: center;
+      padding: 80px 0;
+      background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+    }
+
+    .cta-card {
+      background: var(--gradient-card);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-lg);
+      padding: 45px 30px;
+      box-shadow: var(--shadow-glow);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      margin-top: 26px;
+      background: var(--gradient-accent);
+      color: #ffffff;
+      font-size: 1.15rem;
+      font-weight: 700;
+      padding: 16px 36px;
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px -5px rgba(6, 182, 212, 0.6);
+    }
+
+    .cta-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+    }
+
+    /* ==========================================================================
+       FOOTER
+       ========================================================================== */
+    .footer {
+      padding: 35px 0;
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       1. HEADER / NAVEGACIÓN PRINCIPAL
+       ========================================================================== */
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#" class="brand-logo">
+        <span class="brand-badge"></span>
+        Ignacio | Servicios de IA
+      </a>
+      <a href="#agendar" class="btn-header">Agendar reunión</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         SECCIÓN 1: QUIÉN SOY Y QUÉ OFREZCO (HERO)
+         ========================================================================== -->
+    <section class="hero" id="inicio">
+      <div class="container">
+        <span class="section-badge">Automatización para WhatsApp & Agenda</span>
+        <h1 class="hero-title">
+          Chau al caos de WhatsApp: <span>tu negocio atendido y con turnos confirmados las 24 hs.</span>
+        </h1>
+        
+        <div class="hero-card">
+          <p class="hero-phrase">
+            Soy Ignacio y conecto tu WhatsApp con tu calendario para que no pierdas más horas respondiendo siempre lo mismo ni se te escapen clientes por demorar en contestar.
+          </p>
+          <p class="hero-phrase">
+            Te armo un sistema que responde dudas frecuentes al instante, guarda la ficha de cada consulta y te deja las citas agendadas solas en tu agenda de siempre.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCIÓN 2: PARA QUIÉN SÍ / PARA QUIÉN NO
+         ========================================================================== -->
+    <section id="para-quien">
+      <div class="container">
+        <span class="section-badge">Filtro de idoneidad</span>
+        <h2 class="section-title">¿Es para tu negocio?</h2>
+        <p class="section-desc">
+          Queremos asegurarnos de que esta solución genere un impacto real y positivo en tu trabajo diario.
+        </p>
+
+        <div class="grid-qualification">
+          <!-- Para quién sí -->
+          <div class="card-qual si">
+            <div class="qual-header">
+              <span class="qual-icon si">✓</span>
+              Para quién sí
+            </div>
+            <p class="section-desc">
+              Profesionales, consultorios, centros de estética, estudios y talleres que reciben muchas consultas diarias y quieren dejar de vivir pegados al celular coordinando turnos.
+            </p>
+          </div>
+
+          <!-- Para quién no -->
+          <div class="card-qual no">
+            <div class="qual-header">
+              <span class="qual-icon no">✕</span>
+              Para quién no
+            </div>
+            <p class="section-desc">
+              Negocios que recién arrancan sin volumen de mensajes o personas que prefieren seguir anotando citas a mano en un cuaderno.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCIÓN 3: DEMO (ANTES Y DESPUÉS)
+         ========================================================================== -->
+    <section id="demo">
+      <div class="container">
+        <span class="section-badge">Transformación visual</span>
+        <h2 class="section-title">De contestar mensajes a las 11 de la noche a tener la agenda llena sola.</h2>
+
+        <div class="demo-comparison">
+          <!-- Antes -->
+          <div class="demo-box antes">
+            <span class="demo-box-tag">❌ El Antes</span>
+            <p class="section-desc">
+              Clientes esperando horas una respuesta, turnos superpuestos por error y vos pasando datos a mano después de cerrar el local.
+            </p>
+          </div>
+
+          <!-- Después -->
+          <div class="demo-box despues">
+            <span class="demo-box-tag">✨ El Después</span>
+            <p class="section-desc">
+              Tu asistente responde al toque a cualquier hora, filtra a los interesados y vos abrís el celular con el día ya organizado y confirmado.
+            </p>
+          </div>
+        </div>
+
+        <!-- Caja de Demo (Placeholder) -->
+        <div class="demo-placeholder-frame">
+          <span class="demo-placeholder-icon">📱 ⇄ 📅</span>
+          <h3 style="color: var(--text-highlight); margin-bottom: 8px;">Espacio de Demostración</h3>
+          <p style="font-size: 0.95rem;">Aquí se mostrará la captura o video interactivo de la conversación en WhatsApp y la cita agendada en vivo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCIÓN 4: CÓMO TRABAJO, PASO A PASO
+         ========================================================================== -->
+    <section id="como-trabajo">
+      <div class="container">
+        <span class="section-badge">Implementación ágil</span>
+        <h2 class="section-title">Tu sistema listo y funcionando en menos de una semana.</h2>
+        
+        <div class="steps-list">
+          <!-- Paso 1 -->
+          <div class="step-card">
+            <div class="step-number">01</div>
+            <div>
+              <h3 style="color: var(--text-highlight); margin-bottom: 6px;">Configuración y Conexión</h3>
+              <p class="section-desc">
+                Me pasás tus preguntas frecuentes, tus horarios de atención y en 5 a 7 días hábiles te dejo todo configurado y conectado a tu WhatsApp y Google Calendar.
+              </p>
+            </div>
+          </div>
+
+          <!-- Paso 2 -->
+          <div class="step-card">
+            <div class="step-number">02</div>
+            <div>
+              <h3 style="color: var(--text-highlight); margin-bottom: 6px;">Validación en Vivo</h3>
+              <p class="section-desc">
+                Hacemos una prueba juntos de 30 minutos para validar que todo funcione perfecto y lo dejamos activo.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCIÓN 5: CÓMO ARMO UN PRESUPUESTO
+         ========================================================================== -->
+    <section id="presupuesto">
+      <div class="container">
+        <span class="section-badge">Presupuesto a medida</span>
+        <h2 class="section-title">Una solución a la medida exacta de tu negocio.</h2>
+
+        <div class="budget-grid">
+          <div class="budget-item">
+            <h3><span>🎯</span> Demostración Adaptada</h3>
+            <p class="section-desc">
+              No vendo paquetes enlatados a ciegas: primero vemos en vivo una demo adaptada a tu rubro para que compruebes cómo funciona.
+            </p>
+          </div>
+
+          <div class="budget-item">
+            <h3><span>🤝</span> Propuesta 1 a 1</h3>
+            <p class="section-desc">
+              El presupuesto se define cara a cara en una charla 1:1, únicamente después de ver la demo y confirmar juntos que te va a ahorrar horas de trabajo.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCIÓN 6: PREGUNTAS FRECUENTES (FAQ)
+         ========================================================================== -->
+    <section id="faq">
+      <div class="container">
+        <span class="section-badge">Dudas resueltas</span>
+        <h2 class="section-title">Respuestas claras a tus dudas antes de arrancar.</h2>
+        <p class="section-desc">
+          No tenés que aprender ningún programa difícil, la información no se inventa y si entra un caso especial el sistema te avisa para que tomes el control. Tus turnos nunca se van a superponer con tu agenda personal y tus clientes van a agradecer poder confirmar su cita en dos minutos a cualquier hora.
+        </p>
+
+        <div class="faq-container">
+          <!-- FAQ 1 -->
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Tengo que aprender a usar un programa nuevo o complejo?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>No. No tenés que aprender ningún software raro. La solución se conecta directo a tu WhatsApp actual y a tu Google Calendar de siempre.</p>
+            </div>
+          </div>
+
+          <!-- FAQ 2 -->
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Qué pasa si la IA inventa información o comete un error?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>La IA está configurada con reglas estrictas para responder únicamente con la información oficial y verídica de tu negocio. Si no sabe algo, no inventa.</p>
+            </div>
+          </div>
+
+          <!-- FAQ 3 -->
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Cómo se manejan los casos raros o consultas muy específicas?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Ante una consulta compleja o imprevista, el sistema deriva automáticamente la conversación a vos o a tu equipo para que tomes el control de inmediato.</p>
+            </div>
+          </div>
+
+          <!-- FAQ 4 -->
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Hay riesgo de que se superpongan turnos con mis cosas personales?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>No. El sistema lee tu Google Calendar en tiempo real: si bloqueás un horario para cuestiones personales o descanso, ese espacio no se muestra como disponible para clientes.</p>
+            </div>
+          </div>
+
+          <!-- FAQ 5 -->
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Los clientes van a rechazar hablar con un sistema automatizado?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Al contrario: los clientes valoran la inmediatez. Poder consultar dudas y confirmar una cita en 2 minutos a las 10 de la noche genera una experiencia mucho más ágil y profesional que esperar horas una respuesta manual.</p>
+            </div>
+          </div>
+
+          <!-- FAQ 6 -->
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿En cuánto tiempo veo el retorno de mi inversión?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Recuperás horas de trabajo manual desde el primer día que queda activo, dejando de perder clientes por demoras en contestar.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCIÓN 7: BOTÓN PARA AGENDAR REUNIÓN (CTA FINAL)
+         ========================================================================== -->
+    <section class="cta-section" id="agendar">
+      <div class="container">
+        <div class="cta-card">
+          <span class="section-badge">Próximo paso</span>
+          <h2 class="section-title" style="margin-bottom: 12px;">Recuperá tu tiempo y ordená tus turnos hoy.</h2>
+          <p class="section-desc" style="max-width: 600px; margin: 0 auto 12px;">
+            Elegí un día y horario en el calendario de abajo para que nos conectemos 20 minutos por videollamada y te muestre la demo en vivo.
+          </p>
+          <p class="section-desc" style="max-width: 600px; margin: 0 auto;">
+            Sin compromiso: si vemos que te sirve te paso la propuesta; si no, te llevás una idea clara de cómo optimizar la atención de tu negocio.
+          </p>
+
+          <!-- Botón de llamado a la acción (CTA) -->
+          <a href="#agendar" class="cta-btn" onclick="alert('En el siguiente paso conectaremos tu calendario de reservas (ej. Calendly).'); return false;">
+            Agendá una reunión de 20 minutos
+          </a>
+
+          <p class="cta-note">🔒 Reunión 1:1 directa sin compromiso de compra.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 Ignacio — Soluciones de Automatización e Inteligencia Artificial.</p>
+      <p style="margin-top: 4px; font-size: 0.8rem; color: #4b5563;">Listo para alojar en GitHub Pages o abrir directamente con doble clic.</p>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       JAVASCRIPT EMBEBIDO: INTERACTIVIDAD DE PREGUNTAS FRECUENTES (FAQ)
+       ========================================================================== -->
+  <script>
+    // Manejo de acordeón interactivo para las preguntas frecuentes
+    document.addEventListener('DOMContentLoaded', () => {
+      const faqItems = document.querySelectorAll('.faq-item');
+
+      faqItems.forEach(item => {
+        const questionBtn = item.querySelector('.faq-question');
+        
+        questionBtn.addEventListener('click', () => {
+          const isActive = item.classList.contains('active');
+          
+          // Opcional: cerrar los demás elementos abiertos
+          faqItems.forEach(otherItem => {
+            otherItem.classList.remove('active');
+          });
+
+          // Alternar el estado del elemento clickeado
+          if (!isActive) {
+            item.classList.add('active');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
